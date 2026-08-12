@@ -1,16 +1,14 @@
-# 🌑 Eclipse 2026 Distribution
+# Eclipse 2026 Distribution 🌑
 
-> Um protótipo de produto que explora como necessidades de negócio, experiência do utilizador e tecnologia podem trabalhar em conjunto para resolver um desafio real de distribuição.
+Um protótipo de produto que explora como necessidades de negócio, experiência do utilizador e tecnologia podem trabalhar em conjunto para resolver um desafio real de distribuição.
 
 [![Status](https://img.shields.io/badge/status-protótipo%20em%20desenvolvimento-6f5bd3)](#estado-do-projeto)
 [![Focus](https://img.shields.io/badge/foco-Product%20%7C%20Business%20Analysis%20%7C%20Agile-202020)](#perspetiva-de-produto)
 
-## 💡 De onde surgiu esta ideia?
+## De onde surgiu esta ideia? 💡
+A ideia nasceu a partir de uma situação muito concreta: a elevada procura por óculos próprios para observar um eclipse solar em Portugal e a necessidade de distribuir uma quantidade limitada de unidades por vários pontos de levantamento.
 
-A ideia nasceu a partir de uma situação muito concreta: a elevada procura por óculos próprios para observar um eclipse solar e a necessidade de distribuir uma quantidade limitada de unidades por vários pontos de levantamento.
-
-A pergunta inicial foi simples:
-
+A pergunta inicial foi:
 > **Como garantir que cada pessoa recebe apenas um par de óculos, mesmo quando existem vários pontos de distribuição?**
 
 A partir dessa pergunta, o problema deixou de ser apenas uma questão de stock e passou a envolver **jornada do utilizador, regras de negócio, prevenção de fraude, gestão de acessos, privacidade, operações e tecnologia**.
