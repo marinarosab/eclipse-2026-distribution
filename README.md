@@ -2,22 +2,18 @@
 
 Um protótipo de produto que explora como necessidades de negócio, experiência do utilizador e tecnologia podem trabalhar em conjunto para resolver um desafio real de distribuição.
 
-[![Status](https://img.shields.io/badge/status-protótipo%20em%20desenvolvimento-6f5bd3)](#estado-do-projeto)
-[![Focus](https://img.shields.io/badge/foco-Product%20%7C%20Business%20Analysis%20%7C%20Agile-202020)](#perspetiva-de-produto)
-
 ## De onde surgiu esta ideia? 💡
 A ideia nasceu a partir de uma situação muito concreta: a elevada procura por óculos próprios para observar um eclipse solar em Portugal e a necessidade de distribuir uma quantidade limitada de unidades por vários pontos de levantamento.
 
 A pergunta inicial foi:
+
 > **Como garantir que cada pessoa recebe apenas um par de óculos, mesmo quando existem vários pontos de distribuição?**
 
 A partir dessa pergunta, o problema deixou de ser apenas uma questão de stock e passou a envolver **jornada do utilizador, regras de negócio, prevenção de fraude, gestão de acessos, privacidade, operações e tecnologia**.
 
 Este projeto é uma experiência prática para transformar esse problema num produto digital funcional.
 
----
-
-## 🎯 O problema
+## O problema 🎯
 
 Quando uma campanha tem muitos pontos físicos de distribuição, alguns desafios aparecem rapidamente:
 
@@ -32,16 +28,13 @@ Quando uma campanha tem muitos pontos físicos de distribuição, alguns desafio
 
 O produto foi pensado para responder a estas perguntas antes de começar a pensar na tecnologia.
 
----
-
-## 🚀 A solução
+## A solução 🚀
 
 O **Eclipse 2026 Distribution** organiza a experiência em quatro perspetivas principais:
 
-### 👤 Participante
+### Participante 👤
 
 Uma experiência simples para:
-
 - realizar a inscrição;
 - receber a confirmação;
 - receber o seu QR Code;
@@ -50,10 +43,9 @@ Uma experiência simples para:
 
 O participante não tem acesso às áreas internas de operação ou gestão.
 
-### 📷 Operador do ponto de distribuição
+### Operador do ponto de distribuição 📷
 
 Uma interface orientada para a operação do dia a dia:
-
 - autenticação;
 - leitura do QR Code através da câmara;
 - validação da inscrição;
@@ -62,20 +54,18 @@ Uma interface orientada para a operação do dia a dia:
 
 A experiência é deliberadamente simples: **o operador precisa de conseguir validar e entregar, não de gerir toda a operação**.
 
-### 🏪 Responsável pelo ponto
+### Responsável pelo ponto 🏪
 
 Uma área protegida para acompanhar a operação do seu ponto:
-
 - stock disponível;
 - levantamentos realizados;
 - histórico;
 - operadores autorizados;
 - indicadores relevantes para aquele ponto.
 
-### 🌍 Organizador
+### Organizador 🌍
 
 Uma visão global da campanha:
-
 - inscrições;
 - levantamentos;
 - stock por ponto;
@@ -87,19 +77,16 @@ Uma visão global da campanha:
 
 ---
 
-## 🧭 Perspetiva de produto
+## Perspetiva de produto 🧭
 
 Este projeto não começou por uma stack tecnológica. Começou por um **problema de negócio**.
 
 A lógica seguida foi:
-
 **Problema → necessidades → jornadas → regras de negócio → experiência → arquitetura → tecnologia**
 
 É precisamente nesta interseção entre **negócio, pessoas e tecnologia** que este projeto pretende demonstrar valor.
 
----
-
-## 🧩 Decisões de produto
+## Decisões de produto 🧩
 
 ### QR Code em vez de NIF
 
