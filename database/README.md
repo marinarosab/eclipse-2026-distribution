@@ -96,7 +96,7 @@ Regista eventos relacionados com emails transacionais sem transformar o históri
 
 1. **Uma inscrição válida = uma autorização de levantamento.**
 2. O NIF identifica a unicidade da inscrição na campanha.
-3. O NIF não é colocado no QR Code nem precisa de ser armazenado em texto simples.
+3. O NIF não é colocado no QR Code nem é armazenado em texto simples.
 4. Cada participante tem um único QR token.
 5. Perder o email não gera um segundo token: o sistema pode reenviar o mesmo token enquanto este estiver válido.
 6. Um QR já utilizado não pode ser utilizado novamente.
@@ -112,18 +112,36 @@ Regista eventos relacionados com emails transacionais sem transformar o históri
 
 ## PostgreSQL / Supabase
 
-O ficheiro `schema.sql` utiliza PostgreSQL e foi escrito para poder ser aplicado num projeto Supabase.
+O modelo PostgreSQL foi transformado numa **migration versionada** em `supabase/migrations/20260814000000_initial_schema.sql`.
 
-A aplicação das políticas de Row Level Security ficará numa etapa própria, depois de o projeto Supabase estar criado e o modelo de autenticação confirmado.
+A migration já foi aplicada com sucesso ao projeto Supabase, onde as tabelas, relações, índices, constraints, enums e triggers definidos nesta primeira versão foram criados.
 
-Isto permite separar duas decisões:
+Neste momento, a base de dados está funcional como estrutura persistente, mas **ainda não está pronta para utilização pela aplicação em produção**: as políticas de Row Level Security e a camada de autenticação/autorização serão implementadas numa etapa própria.
 
-**Modelo de negócio → autorização técnica**
+O fluxo adotado para alterações futuras é:
 
-Primeiro definimos quem pode fazer o quê. Depois traduzimos essas regras para as policies da base de dados.
+**Decisão de produto → migration versionada → GitHub → Supabase**
 
-## Nota sobre evolução
+Isto mantém o modelo de dados e a infraestrutura sincronizados e permite rastrear a evolução do schema.
 
-Este é o primeiro modelo do produto, não um contrato definitivo.
+## Estrutura atual
 
-À medida que o fluxo de inscrição, levantamento, stock, emails e dashboards for implementado, o schema será evoluído através de alterações versionadas.
+```text
+supabase/
+└── migrations/
+    └── 20260814000000_initial_schema.sql
+```
+
+O ficheiro `database/schema.sql` continua como representação de referência/documentação do modelo, enquanto as migrations em `supabase/migrations/` representam as alterações executáveis no Supabase.
+
+## Próximas evoluções do modelo
+
+As próximas alterações estruturais serão feitas através de novas migrations, nomeadamente para:
+
+- Row Level Security e políticas de acesso;
+- integração com Supabase Auth;
+- regras de autorização por função e ponto;
+- automatizações de stock e levantamento, quando necessário;
+- requisitos adicionais identificados durante a implementação da aplicação.
+
+Este é o primeiro modelo do produto, não um contrato definitivo. O schema será evoluído de forma versionada à medida que os fluxos de inscrição, levantamento, stock, emails e dashboards forem implementados.
