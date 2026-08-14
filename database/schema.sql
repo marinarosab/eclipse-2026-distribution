@@ -104,11 +104,17 @@ create index if not exists idx_point_access_point
 
 -- ============================================================
 -- PARTICIPANTS
+--
+-- The NIF is used as the campaign-level identity/deduplication key.
+-- We deliberately do NOT store the NIF in plaintext. The application/backend
+-- stores a cryptographic hash and uses it to prevent a second registration
+-- for the same NIF. The QR flow does not need to expose the NIF.
 -- ============================================================
 
 create table if not exists public.participants (
   id uuid primary key default gen_random_uuid(),
   participant_code text not null unique,
+  nif_hash text not null unique,
   full_name text not null,
   email text not null,
   distribution_point_id uuid not null references public.distribution_points(id) on delete restrict,
@@ -181,9 +187,17 @@ create table if not exists public.claims (
   status public.claim_status not null default 'confirmed',
   claimed_at timestamptz not null default now(),
   reversal_reason text,
-  created_at timestamptz not null default now(),
-  constraint one_confirmed_claim_per_participant unique (participant_id)
+  created_at timestamptz not null default now()
 );
+
+-- A reversal is an administrative correction, not a second claim.
+-- Only one claim may be confirmed at any given time for a participant.
+create unique index if not exists uq_one_confirmed_claim_per_participant
+  on public.claims(participant_id)
+  where status = 'confirmed';
+
+create index if not exists idx_claims_participant_date
+  on public.claims(participant_id, claimed_at desc);
 
 create index if not exists idx_claims_point_date
   on public.claims(distribution_point_id, claimed_at desc);
