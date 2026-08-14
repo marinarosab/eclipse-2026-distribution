@@ -150,7 +150,7 @@ A solução procura aplicar princípios como:
 
 **Protótipo em desenvolvimento.**
 
-O projeto está a evoluir por etapas, começando pela definição da experiência e das regras de negócio e avançando progressivamente para uma implementação full-stack.
+A base de dados PostgreSQL já está criada no Supabase a partir de uma migration versionada no GitHub. A próxima fase é implementar autenticação, permissões e as experiências da aplicação sobre esta base.
 
 ### Roadmap
 
@@ -159,15 +159,17 @@ O projeto está a evoluir por etapas, começando pela definição da experiênci
 - [x] Definição inicial das regras de negócio
 - [x] Protótipo inicial da jornada de inscrição
 - [ ] Experiência final de inscrição
-- [ ] QR Code e token de utilização única
-- [ ] Base de dados persistente
+- [x] Modelo de dados PostgreSQL definido
+- [x] Base de dados persistente criada no Supabase
+- [ ] Row Level Security e políticas de acesso
 - [ ] Autenticação e gestão de permissões
+- [ ] QR Code e token de utilização única
 - [ ] Área operacional para pontos de distribuição
 - [ ] Gestão de stock
 - [ ] Dashboard do responsável pelo ponto
 - [ ] Dashboard global do organizador
 - [ ] Envio de emails transacionais
-- [ ] Auditoria e eventos
+- [ ] Auditoria e eventos da aplicação
 - [ ] Revisão de privacidade e GDPR
 - [ ] Deploy e demonstração online
 
@@ -204,19 +206,23 @@ A implementação técnica será documentada à medida que o produto evoluir.
 
 ## 📁 Estrutura do projeto
 
-A estrutura será evoluída à medida que as diferentes áreas do produto forem implementadas.
-
 ```text
 .
 ├── README.md
 ├── src/
-├── public/
 ├── database/
-├── docs/
+│   ├── schema.sql
+│   └── README.md
+├── supabase/
+│   ├── migrations/
+│   │   └── 20260814000000_initial_schema.sql
+│   └── README.md
+├── package.json
+├── tsconfig.json
 └── ...
 ```
 
-A organização final refletirá a arquitetura efetivamente implementada e será mantida alinhada com a evolução do produto.
+A estrutura será mantida alinhada com a evolução efetivamente implementada do produto.
 
 ---
 
