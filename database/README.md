@@ -16,9 +16,10 @@ Organization
    ├── Staff Profiles
    │
    └── Participants
+           ├── NIF hash
            ├── Consents
            ├── QR Token
-           └── Claim
+           └── Claims
 ```
 
 ## Entidades principais
@@ -48,9 +49,11 @@ Liga utilizadores internos aos pontos de distribuição a que podem aceder.
 Isto permite que a autorização seja definida por função **e** por contexto.
 
 ### Participants
-Representa uma inscrição na campanha.
+Representa uma inscrição individual válida na campanha e a respetiva autorização de levantamento.
 
-O participante recebe um `participant_code`, mas esse código não deve ser confundido com uma credencial de acesso ao backoffice.
+O NIF é utilizado como identificador de unicidade da campanha, mas o modelo não o guarda em texto simples: guarda um hash criptográfico para permitir a validação de duplicados sem expor desnecessariamente o documento na base de dados.
+
+O participante recebe um `participant_code`, que não é uma credencial de acesso ao backoffice.
 
 ### Consents
 Regista os consentimentos associados à inscrição, incluindo a versão da informação/política aceite.
@@ -59,6 +62,8 @@ Regista os consentimentos associados à inscrição, incluindo a versão da info
 Representa a autorização digital de levantamento.
 
 O modelo prevê que seja guardado apenas o **hash do token**, e não o token original em texto simples.
+
+Cada inscrição tem um único token. Se o participante perder o email, o mesmo token pode ser reenviado; não é criado um segundo token.
 
 O token pode assumir estados como:
 
@@ -70,32 +75,40 @@ O token pode assumir estados como:
 ### Claims
 Representa a entrega efetiva dos óculos.
 
-Existe uma constraint de base de dados que impede mais do que um registo de levantamento confirmado para o mesmo participante.
+A base de dados permite apenas um levantamento **confirmado** por participante. Uma correção administrativa pode reverter esse registo, mantendo o histórico em vez de apagar a operação.
 
-Isto é deliberado: a regra de “um participante, um levantamento” não pode depender apenas do frontend.
+A reversão não transforma o participante numa nova inscrição nem cria um novo QR Code.
 
 ### Inventory
 Representa o stock associado a cada ponto.
 
 A estrutura inicial permite distinguir quantidade inicial, recebimentos, ajustes e unidades entregues.
 
+Uma alteração do ponto de levantamento só deve ser permitida enquanto não existir um levantamento confirmado e deve respeitar a disponibilidade de stock do novo ponto.
+
 ### Audit Logs
-Regista ações relevantes para permitir rastreabilidade da operação.
+Regista ações relevantes para permitir rastreabilidade da operação, incluindo ações administrativas como reversões.
 
 ### Email Events
 Regista eventos relacionados com emails transacionais sem transformar o histórico de email num mecanismo de autenticação.
 
-## Regras de negócio representadas no modelo
+## Regras de negócio acordadas
 
-1. Cada participante está associado a um ponto de levantamento.
-2. Cada participante pode ter um único QR token.
-3. Um token utilizado deixa de poder ser utilizado novamente.
-4. Um participante pode ter, no máximo, um levantamento confirmado.
-5. Um operador só deverá conseguir executar operações nos pontos a que está autorizado.
-6. Um manager só deverá conseguir gerir os pontos que lhe estão atribuídos.
-7. O organizer tem uma visão global da organização.
-8. Dados pessoais não são colocados diretamente no QR Code.
-9. O acesso a dados e operações será posteriormente protegido através de Row Level Security no Supabase.
+1. **Uma inscrição válida = uma autorização de levantamento.**
+2. O NIF identifica a unicidade da inscrição na campanha.
+3. O NIF não é colocado no QR Code nem precisa de ser armazenado em texto simples.
+4. Cada participante tem um único QR token.
+5. Perder o email não gera um segundo token: o sistema pode reenviar o mesmo token enquanto este estiver válido.
+6. Um QR já utilizado não pode ser utilizado novamente.
+7. O ponto de levantamento pode ser alterado enquanto o participante ainda não tiver levantado os óculos.
+8. A alteração de ponto depende de existir stock disponível no novo ponto.
+9. Depois de um levantamento confirmado, o ponto fica bloqueado para essa inscrição.
+10. Um operador pode executar o levantamento apenas nos pontos a que está autorizado.
+11. Uma reversão de levantamento é uma ação administrativa e não deve ficar disponível ao operador comum.
+12. O manager autorizado do ponto pode efetuar uma reversão administrativa, com motivo obrigatório e registo de auditoria.
+13. O organizer mantém visão global da campanha.
+14. Dados pessoais não são colocados diretamente no QR Code.
+15. As regras de acesso serão posteriormente reforçadas através de Row Level Security no Supabase.
 
 ## PostgreSQL / Supabase
 
