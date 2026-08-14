@@ -37,9 +37,9 @@ Representa utilizadores internos autenticados da plataforma.
 
 Existem três funções principais:
 
-- **Organizer** — visão global da campanha;
-- **Manager** — gestão de um ou mais pontos autorizados;
-- **Operator** — execução da operação de levantamento.
+- **Organizer**: visão global da campanha;
+- **Manager**: gestão de um ou mais pontos autorizados;
+- **Operator**: execução da operação de levantamento.
 
 Um participante não precisa de criar uma conta interna.
 
