@@ -7,7 +7,8 @@ Esta pasta contém a infraestrutura versionada do projeto Eclipse 2026 Distribut
 ```text
 supabase/
 ├── migrations/
-│   └── 20260814000000_initial_schema.sql
+│   ├── 20260814000000_initial_schema.sql
+│   └── 20260815000000_rls_and_authorization.sql
 └── README.md
 ```
 
@@ -16,6 +17,10 @@ supabase/
 A migration inicial cria o modelo relacional definido para o MVP, incluindo participantes, pontos de levantamento, perfis internos, acessos, consentimentos, QR tokens, levantamentos, stock, auditoria e eventos de email.
 
 O ficheiro executável desta pasta é mantido em paralelo com o modelo de referência em `database/schema.sql`.
+
+## RLS e autorização
+
+A segunda migration ativa Row Level Security nas tabelas da aplicação e define a baseline de autorização por organização, função e ponto de distribuição. A autenticação será fornecida pelo Supabase Auth; as ações críticas, como inscrição pública, validação de QR Code, confirmação de levantamento e reversões, continuarão a ser implementadas como operações seguras no servidor em vez de escritas diretas do cliente.
 
 ## Regra de evolução
 
@@ -41,7 +46,6 @@ A documentação oficial do Supabase recomenda este modelo de migrations para ma
 
 ## Próximas migrations previstas
 
-- RLS e policies por função e ponto de distribuição;
 - funções transacionais para inscrição e levantamento;
 - regras de alteração de ponto;
 - mecanismos de reversão administrativa;

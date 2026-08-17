@@ -150,7 +150,9 @@ A solução procura aplicar princípios como:
 
 **Protótipo em desenvolvimento.**
 
-A base de dados PostgreSQL já está criada no Supabase a partir de uma migration versionada no GitHub. A próxima fase é implementar autenticação, permissões e as experiências da aplicação sobre esta base.
+A base de dados PostgreSQL e a baseline de Row Level Security (RLS) já estão criadas no Supabase a partir de migrations versionadas no GitHub. A aplicação Next.js já está ligada ao Supabase: o cliente está configurado localmente através de variáveis de ambiente e o endpoint interno `GET /api/supabase-test` foi validado com sucesso.
+
+As próximas etapas são ligar o Supabase Auth à experiência da aplicação e implementar as operações de negócio protegidas — inscrição, validação do QR Code, levantamento, gestão de stock e auditoria. As credenciais continuam exclusivamente no ambiente local/deploy e não fazem parte do repositório.
 
 ### Roadmap
 
@@ -161,7 +163,9 @@ A base de dados PostgreSQL já está criada no Supabase a partir de uma migratio
 - [ ] Experiência final de inscrição
 - [x] Modelo de dados PostgreSQL definido
 - [x] Base de dados persistente criada no Supabase
-- [ ] Row Level Security e políticas de acesso
+- [x] Row Level Security e políticas de acesso (baseline)
+- [x] Cliente Next.js ligado ao Supabase
+- [x] Endpoint interno de verificação da ligação ao Supabase
 - [ ] Autenticação e gestão de permissões
 - [ ] QR Code e token de utilização única
 - [ ] Área operacional para pontos de distribuição
@@ -191,7 +195,7 @@ A arquitetura prevista inclui:
 - registo de eventos e auditoria;
 - deployment contínuo.
 
-A implementação técnica será documentada à medida que o produto evoluir.
+Implementado até ao momento: migrations PostgreSQL/Supabase, baseline de RLS e autorização, cliente Supabase na aplicação Next.js e um endpoint interno de verificação da ligação. A implementação técnica continuará a ser documentada à medida que o produto evoluir.
 
 ### Princípios técnicos
 

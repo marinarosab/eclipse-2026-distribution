@@ -114,9 +114,9 @@ Regista eventos relacionados com emails transacionais sem transformar o históri
 
 O modelo PostgreSQL foi transformado numa **migration versionada** em `supabase/migrations/20260814000000_initial_schema.sql`.
 
-A migration já foi aplicada com sucesso ao projeto Supabase, onde as tabelas, relações, índices, constraints, enums e triggers definidos nesta primeira versão foram criados.
+A migration inicial e a migration de RLS/autorização já foram aplicadas com sucesso ao projeto Supabase. As tabelas, relações, índices, constraints, enums e triggers definidos na primeira versão estão criados; a segunda migration ativa RLS e estabelece políticas de acesso por organização, função e ponto de distribuição.
 
-Neste momento, a base de dados está funcional como estrutura persistente, mas **ainda não está pronta para utilização pela aplicação em produção**: as políticas de Row Level Security e a camada de autenticação/autorização serão implementadas numa etapa própria.
+Neste momento, a base de dados está funcional como estrutura persistente e tem uma baseline de autorização. Ainda não está pronta para utilização em produção: falta ligar o Supabase Auth à aplicação e implementar as operações críticas através de fluxos seguros no servidor.
 
 O fluxo adotado para alterações futuras é:
 
@@ -129,7 +129,8 @@ Isto mantém o modelo de dados e a infraestrutura sincronizados e permite rastre
 ```text
 supabase/
 └── migrations/
-    └── 20260814000000_initial_schema.sql
+    ├── 20260814000000_initial_schema.sql
+    └── 20260815000000_rls_and_authorization.sql
 ```
 
 O ficheiro `database/schema.sql` continua como representação de referência/documentação do modelo, enquanto as migrations em `supabase/migrations/` representam as alterações executáveis no Supabase.
@@ -138,7 +139,6 @@ O ficheiro `database/schema.sql` continua como representação de referência/do
 
 As próximas alterações estruturais serão feitas através de novas migrations, nomeadamente para:
 
-- Row Level Security e políticas de acesso;
 - integração com Supabase Auth;
 - regras de autorização por função e ponto;
 - automatizações de stock e levantamento, quando necessário;
