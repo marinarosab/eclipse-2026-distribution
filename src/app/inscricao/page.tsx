@@ -17,10 +17,9 @@ interface RegistrationResult {
 
 const ERROR_MESSAGES: Record<string, string> = {
   missing_fields: "Preenche todos os campos obrigatórios.",
-  invalid_nif: "O NIF deve ter exatamente 9 dígitos.",
   invalid_email: "Introduz um endereço de email válido.",
-  nif_already_registered:
-    "Este NIF já tem uma inscrição registada nesta campanha.",
+  email_already_registered:
+    "Este email já tem uma inscrição registada nesta campanha.",
   invalid_point: "O ponto de levantamento selecionado não está disponível.",
   registration_failed:
     "Ocorreu um erro ao processar a inscrição. Tenta novamente.",
@@ -51,7 +50,6 @@ export default function InscricaoPage() {
 
     const payload = {
       name: data.get("name") as string,
-      nif: data.get("nif") as string,
       email: data.get("email") as string,
       pointId: data.get("point") as string,
     }
@@ -169,25 +167,6 @@ export default function InscricaoPage() {
         </div>
 
         <div className="field">
-          <label htmlFor="nif">NIF</label>
-          <input
-            id="nif"
-            name="nif"
-            required
-            inputMode="numeric"
-            pattern="[0-9]{9}"
-            maxLength={9}
-            placeholder="000000000"
-            autoComplete="off"
-            disabled={submitting}
-          />
-          <div className="helper">
-            O NIF é utilizado para garantir que cada pessoa tem apenas uma
-            inscrição válida na campanha. Não será colocado no QR Code.
-          </div>
-        </div>
-
-        <div className="field">
           <label htmlFor="email">Email</label>
           <input
             id="email"
@@ -199,7 +178,9 @@ export default function InscricaoPage() {
             disabled={submitting}
           />
           <div className="helper">
-            Será utilizado para enviar a confirmação da inscrição e o QR Code.
+            Utilizado para enviar a confirmação da inscrição e o QR Code.
+            Garante tambem que cada pessoa tem apenas uma inscrição válida
+            na campanha.
           </div>
         </div>
 
@@ -213,7 +194,7 @@ export default function InscricaoPage() {
             disabled={submitting || loadingPoints}
           >
             <option value="" disabled>
-              {loadingPoints ? "A carregar pontos…" : "Seleciona um ponto"}
+              {loadingPoints ? "A carregar pontos..." : "Seleciona um ponto"}
             </option>
             {points.map((p) => (
               <option key={p.id} value={p.id}>
@@ -222,8 +203,8 @@ export default function InscricaoPage() {
             ))}
           </select>
           <div className="helper">
-            Poderás alterar o ponto mais tarde, desde que o levantamento ainda
-            não tenha sido realizado e exista stock no novo ponto.
+            Poderás alterar o ponto mais tarde, desde que o levantamento
+            ainda não tenha sido realizado e exista stock disponivel.
           </div>
         </div>
 
@@ -259,7 +240,7 @@ export default function InscricaoPage() {
           style={{ marginTop: 24, width: "100%" }}
           disabled={submitting}
         >
-          {submitting ? "A processar…" : "Confirmar inscrição"}
+          {submitting ? "A processar..." : "Confirmar inscrição"}
         </button>
       </form>
     </main>
