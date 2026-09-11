@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createHash, randomUUID } from "crypto"
+import { randomUUID, createHash } from "crypto"
 import { createServiceClient } from "@/lib/supabase-server"
-
-function hashNif(nif: string): string {
-  const pepper = process.env.NIF_PEPPER ?? ""
-  return createHash("sha256").update(pepper + nif).digest("hex")
-}
 
 function generateParticipantCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
@@ -30,19 +25,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "invalid_request" }, { status: 400 })
   }
 
-  const { name, nif, email, pointId } = body as {
+  const { name, email, pointId } = body as {
     name?: string
-    nif?: string
     email?: string
     pointId?: string
   }
 
-  if (!name || !nif || !email || !pointId) {
+  if (!name || !email || !pointId) {
     return NextResponse.json({ error: "missing_fields" }, { status: 400 })
-  }
-
-  if (!/^\d{9}$/.test(nif)) {
-    return NextResponse.json({ error: "invalid_nif" }, { status: 400 })
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -50,17 +40,17 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = createServiceClient()
-  const nifHash = hashNif(nif)
+  const normalizedEmail = String(email).trim().toLowerCase()
 
-  // Verificar NIF duplicado
+  // Verificar email duplicado
   const { data: existing } = await supabase
     .from("participants")
     .select("id")
-    .eq("nif_hash", nifHash)
+    .eq("email", normalizedEmail)
     .maybeSingle()
 
   if (existing) {
-    return NextResponse.json({ error: "nif_already_registered" }, { status: 409 })
+    return NextResponse.json({ error: "email_already_registered" }, { status: 409 })
   }
 
   // Verificar ponto de distribuição
@@ -94,9 +84,8 @@ export async function POST(request: NextRequest) {
     .from("participants")
     .insert({
       participant_code: participantCode,
-      nif_hash: nifHash,
       full_name: String(name).trim(),
-      email: String(email).trim().toLowerCase(),
+      email: normalizedEmail,
       distribution_point_id: pointId,
       status: "pending",
     })
