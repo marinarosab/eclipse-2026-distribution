@@ -88,13 +88,13 @@ A lógica seguida foi:
 
 ## Decisões de produto 🧩
 
-### QR Code em vez de NIF
+### Email como identificador de inscrição
 
-Uma das primeiras ideias consideradas foi utilizar o NIF como identificador único.
+Uma das primeiras ideias consideradas foi utilizar o NIF como identificador único para evitar inscrições duplicadas.
 
-A solução foi posteriormente simplificada: **o sistema não precisa de consultar a Autoridade Tributária para resolver este problema**.
+A solução foi simplificada: **o sistema não precisa de recolher o NIF para resolver este problema**. O email é suficiente para garantir a unicidade da inscrição e é um dado que já é necessário para enviar a confirmação ao participante. Esta decisão reduz a quantidade de dados pessoais tratados e elimina uma fonte de fricção no formulário.
 
-Um identificador próprio da campanha associado a um token seguro permite cumprir o objetivo com menos complexidade e com menor tratamento de dados pessoais.
+Um identificador próprio da campanha (código `ECL-XXXXXX`) é gerado no momento da inscrição e associado a um token seguro para o QR Code.
 
 ### Token de utilização única
 
@@ -104,7 +104,7 @@ O sistema foi pensado para que o QR Code esteja associado a um token que, depois
 
 Isto reduz o risco de situações como:
 
-> “Fiz um screenshot do QR Code e enviei-o para outra pessoa.”
+> "Fiz um screenshot do QR Code e enviei-o para outra pessoa."
 
 ### Separação de responsabilidades
 
@@ -150,9 +150,11 @@ A solução procura aplicar princípios como:
 
 **Protótipo em desenvolvimento.**
 
-A base de dados PostgreSQL e a baseline de Row Level Security (RLS) já estão criadas no Supabase a partir de migrations versionadas no GitHub. A aplicação Next.js já está ligada ao Supabase: o cliente está configurado localmente através de variáveis de ambiente e o endpoint interno `GET /api/supabase-test` foi validado com sucesso.
+O fluxo de inscrição do participante está funcional: o formulário recolhe nome, email e ponto de levantamento, a API valida e regista na base de dados, e o participante recebe imediatamente o código de inscrição e o QR Code. A deduplicação é feita por email, sem recolha de NIF.
 
-As próximas etapas são ligar o Supabase Auth à experiência da aplicação e implementar as operações de negócio protegidas — inscrição, validação do QR Code, levantamento, gestão de stock e auditoria. As credenciais continuam exclusivamente no ambiente local/deploy e não fazem parte do repositório.
+A base de dados PostgreSQL com Row Level Security está ativa no Supabase a partir de migrations versionadas no GitHub. A aplicação Next.js está ligada ao Supabase com separação entre cliente público e cliente server-side com service role.
+
+As próximas etapas são o envio do email transacional com o QR Code, a autenticação para as áreas internas (operador, responsável, organizador) e as respetivas interfaces operacionais. As credenciais continuam exclusivamente no ambiente local/deploy e não fazem parte do repositório.
 
 ### Roadmap
 
@@ -160,19 +162,20 @@ As próximas etapas são ligar o Supabase Auth à experiência da aplicação e 
 - [x] Identificação dos principais perfis de utilizador
 - [x] Definição inicial das regras de negócio
 - [x] Protótipo inicial da jornada de inscrição
-- [ ] Experiência final de inscrição
+- [x] Experiência final de inscrição
 - [x] Modelo de dados PostgreSQL definido
 - [x] Base de dados persistente criada no Supabase
 - [x] Row Level Security e políticas de acesso (baseline)
 - [x] Cliente Next.js ligado ao Supabase
 - [x] Endpoint interno de verificação da ligação ao Supabase
+- [x] QR Code e token de utilização única
+- [x] Seed data: organização e pontos de distribuição
+- [ ] Envio de email transacional com QR Code
 - [ ] Autenticação e gestão de permissões
-- [ ] QR Code e token de utilização única
 - [ ] Área operacional para pontos de distribuição
 - [ ] Gestão de stock
 - [ ] Dashboard do responsável pelo ponto
 - [ ] Dashboard global do organizador
-- [ ] Envio de emails transacionais
 - [ ] Auditoria e eventos da aplicação
 - [ ] Revisão de privacidade e GDPR
 - [ ] Deploy e demonstração online
@@ -195,7 +198,7 @@ A arquitetura prevista inclui:
 - registo de eventos e auditoria;
 - deployment contínuo.
 
-Implementado até ao momento: migrations PostgreSQL/Supabase, baseline de RLS e autorização, cliente Supabase na aplicação Next.js e um endpoint interno de verificação da ligação. A implementação técnica continuará a ser documentada à medida que o produto evoluir.
+Implementado até ao momento: migrations PostgreSQL/Supabase (schema, RLS, seed data, ajustes de deduplicação), cliente Supabase separado por contexto (público e service role), endpoints de inscrição e listagem de pontos, formulário de inscrição completo com geração de QR Code e código de participante.
 
 ### Princípios técnicos
 
@@ -214,12 +217,27 @@ Implementado até ao momento: migrations PostgreSQL/Supabase, baseline de RLS e 
 .
 ├── README.md
 ├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── distribution-points/route.ts
+│   │   │   ├── register/route.ts
+│   │   │   └── supabase-test/route.ts
+│   │   ├── inscricao/page.tsx
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   └── lib/
+│       ├── supabase.ts
+│       └── supabase-server.ts
 ├── database/
 │   ├── schema.sql
 │   └── README.md
 ├── supabase/
 │   ├── migrations/
-│   │   └── 20260814000000_initial_schema.sql
+│   │   ├── 20260814000000_initial_schema.sql
+│   │   ├── 20260815000000_rls_and_authorization.sql
+│   │   ├── 20260816000000_seed_data.sql
+│   │   └── 20260817000000_email_dedup.sql
 │   └── README.md
 ├── package.json
 ├── tsconfig.json
